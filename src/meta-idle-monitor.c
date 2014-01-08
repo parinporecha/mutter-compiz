@@ -1,8 +1,8 @@
 /* -*- mode: C; c-file-style: "gnu"; indent-tabs-mode: nil; -*- */
 
-/* 
+/*
  * Copyright 2013 Red Hat, Inc.
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
@@ -12,7 +12,7 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -31,14 +31,14 @@
 #include "config.h"
 
 #include <string.h>
-#include <clutter/clutter.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/sync.h>
+#include <gdk/gdk.h>
+#include <gdk/gdkx.h>
 
-#include <meta/util.h>
-#include <meta/main.h>
-#include <meta/meta-idle-monitor.h>
-#include "display-private.h"
+#include "main.h"
+#include "meta/util.h"
+#include "meta-idle-monitor.h"
 #include "meta-idle-monitor-private.h"
 #include "meta-dbus-idle-monitor.h"
 
@@ -55,6 +55,7 @@ struct _MetaIdleMonitor
   /* X11 implementation */
   Display     *display;
   int          sync_event_base;
+
   XSyncCounter counter;
   XSyncAlarm   user_active_alarm;
 };
@@ -312,6 +313,7 @@ idle_monitor_watch_free (MetaIdleMonitorWatch *watch)
 static void
 init_xsync (MetaIdleMonitor *monitor)
 {
+
   monitor->counter = find_idletime_counter (monitor);
   /* IDLETIME counter not found? */
   if (monitor->counter == None)
@@ -321,6 +323,8 @@ init_xsync (MetaIdleMonitor *monitor)
     }
 
   monitor->user_active_alarm = _xsync_alarm_set (monitor, XSyncNegativeTransition, 1, FALSE);
+
+  gdk_window_add_filter (NULL, (GdkFilterFunc)xevent_filter, monitor);
 }
 
 static void
@@ -338,6 +342,8 @@ meta_idle_monitor_dispose (GObject *object)
       XSyncDestroyAlarm (monitor->display, monitor->user_active_alarm);
       monitor->user_active_alarm = None;
     }
+
+  gdk_window_remove_filter (NULL, (GdkFilterFunc)xevent_filter, monitor);
 
   G_OBJECT_CLASS (meta_idle_monitor_parent_class)->dispose (object);
 }
@@ -384,7 +390,7 @@ meta_idle_monitor_constructed (GObject *object)
 {
   MetaIdleMonitor *monitor = META_IDLE_MONITOR (object);
 
-  monitor->display = meta_get_display ()->xdisplay;
+  monitor->display = GDK_DISPLAY_XDISPLAY (gdk_display_get_default ());
   init_xsync (monitor);
 }
 
@@ -781,8 +787,8 @@ create_monitor_skeleton (GDBusObjectManagerServer *manager,
 }
 
 static void
-on_device_added (ClutterDeviceManager     *device_manager,
-                 ClutterInputDevice       *device,
+on_device_added (GdkDeviceManager         *device_manager,
+                 GdkDevice                *device,
                  GDBusObjectManagerServer *manager)
 {
 
@@ -790,7 +796,7 @@ on_device_added (ClutterDeviceManager     *device_manager,
   int device_id;
   char *path;
 
-  device_id = clutter_input_device_get_device_id (device);
+  device_id = gdk_x11_device_get_id (device);
   monitor = meta_idle_monitor_get_for_device (device_id);
   path = g_strdup_printf ("/org/gnome/Mutter/IdleMonitor/Device%d", device_id);
 
@@ -799,14 +805,14 @@ on_device_added (ClutterDeviceManager     *device_manager,
 }
 
 static void
-on_device_removed (ClutterDeviceManager     *device_manager,
-                   ClutterInputDevice       *device,
+on_device_removed (GdkDeviceManager         *device_manager,
+                   GdkDevice                *device,
                    GDBusObjectManagerServer *manager)
 {
   int device_id;
   char *path;
 
-  device_id = clutter_input_device_get_device_id (device);
+  device_id = gdk_x11_device_get_id (device);
   path = g_strdup_printf ("/org/gnome/Mutter/IdleMonitor/Device%d", device_id);
   g_dbus_object_manager_server_unexport (manager, path);
   g_free (path);
@@ -822,9 +828,9 @@ on_bus_acquired (GDBusConnection *connection,
                  gpointer         user_data)
 {
   GDBusObjectManagerServer *manager;
-  ClutterDeviceManager *device_manager;
+  GdkDeviceManager *device_manager;
   MetaIdleMonitor *monitor;
-  GSList *devices, *iter;
+  GList *devices, *iter;
   char *path;
 
   manager = g_dbus_object_manager_server_new ("/org/gnome/Mutter/IdleMonitor");
@@ -836,11 +842,15 @@ on_bus_acquired (GDBusConnection *connection,
   create_monitor_skeleton (manager, monitor, path);
   g_free (path);
 
-  device_manager = clutter_device_manager_get_default ();
-  devices = clutter_device_manager_list_devices (device_manager);
+  device_manager =  gdk_display_get_device_manager (gdk_display_get_default ());
+  devices =  gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
+  devices = g_list_concat (devices, gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE));
+  devices = g_list_concat (devices, gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_FLOATING));
 
   for (iter = devices; iter; iter = iter->next)
     on_device_added (device_manager, iter->data, manager);
+
+  g_list_free (devices);
 
   g_signal_connect_object (device_manager, "device-added",
                            G_CALLBACK (on_device_added), manager, 0);
@@ -864,10 +874,12 @@ on_name_lost (GDBusConnection *connection,
               gpointer         user_data)
 {
   meta_verbose ("Lost or failed to acquire name %s\n", name);
+
+  mainloop_quit();
 }
 
 void
-meta_idle_monitor_init_dbus (void)
+meta_idle_monitor_init_dbus (gboolean replace)
 {
   static int dbus_name_id;
 
@@ -877,7 +889,7 @@ meta_idle_monitor_init_dbus (void)
   dbus_name_id = g_bus_own_name (G_BUS_TYPE_SESSION,
                                  "org.gnome.Mutter.IdleMonitor",
                                  G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT |
-                                 (meta_get_replace_current_wm () ?
+                                 (replace ?
                                   G_BUS_NAME_OWNER_FLAGS_REPLACE : 0),
                                  on_bus_acquired,
                                  on_name_acquired,

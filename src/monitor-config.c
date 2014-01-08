@@ -37,11 +37,8 @@
 #include "config.h"
 
 #include <string.h>
-#include <clutter/clutter.h>
 #include <libupower-glib/upower.h>
 
-#include <meta/main.h>
-#include <meta/errors.h>
 #include "monitor-private.h"
 
 /* These structures represent the intended/persistent configuration,

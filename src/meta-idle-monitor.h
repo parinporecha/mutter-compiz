@@ -23,7 +23,6 @@
 #define META_IDLE_MONITOR_H
 
 #include <glib-object.h>
-#include <meta/types.h>
 
 #define META_TYPE_IDLE_MONITOR            (meta_idle_monitor_get_type ())
 #define META_IDLE_MONITOR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), META_TYPE_IDLE_MONITOR, MetaIdleMonitor))

@@ -37,13 +37,10 @@
 #ifndef META_MONITOR_PRIVATE_H
 #define META_MONITOR_PRIVATE_H
 
-#include <cogl/cogl.h>
 #include <libgnome-desktop/gnome-pnp-ids.h>
 
-#include "display-private.h"
-#include <meta/screen.h>
-#include "stack-tracker.h"
-#include "ui.h"
+#include "meta/util.h"
+#include "boxes.h"
 #ifdef HAVE_WAYLAND
 #include <wayland-server.h>
 #endif
@@ -88,7 +85,6 @@ struct _MetaOutput
   char *serial;
   int width_mm;
   int height_mm;
-  CoglSubpixelOrder subpixel_order;
 
   MetaMonitorMode *preferred_mode;
   MetaMonitorMode **modes;
@@ -301,7 +297,7 @@ struct _MetaMonitorManagerClass
 
 GType meta_monitor_manager_get_type (void);
 
-void                meta_monitor_manager_initialize (void);
+void                meta_monitor_manager_initialize (gboolean);
 MetaMonitorManager *meta_monitor_manager_get  (void);
 
 void                meta_monitor_manager_rebuild_derived   (MetaMonitorManager *manager);

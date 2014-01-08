@@ -22,9 +22,9 @@
  *         from gnome-desktop/libgnome-desktop/gnome-idle-monitor.c
  */
 
-#include <meta/meta-idle-monitor.h>
-
+#include "meta-idle-monitor.h"
+#include <X11/Xlib.h>
 void meta_idle_monitor_handle_xevent_all (XEvent *xevent);
 
 
-void meta_idle_monitor_init_dbus (void);
+void meta_idle_monitor_init_dbus (gboolean replace);

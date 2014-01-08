@@ -30,11 +30,11 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#include <clutter/clutter.h>
 
-#include <meta/main.h>
-#include <meta/util.h>
-#include <meta/errors.h>
+#include <libintl.h>
+#define _(x) dgettext (GETTEXT_PACKAGE, x)
+
+#include "main.h"
 #include "monitor-private.h"
 
 #include "meta-dbus-xrandr.h"
@@ -53,6 +53,7 @@ enum {
 };
 
 static int signals[SIGNALS_LAST];
+static gboolean replace;
 
 static void meta_monitor_manager_display_config_init (MetaDBusDisplayConfigIface *iface);
 
@@ -160,7 +161,6 @@ read_current_dummy (MetaMonitorManager *manager)
   manager->outputs[0].serial = g_strdup ("0xC0F01A");
   manager->outputs[0].width_mm = 510;
   manager->outputs[0].height_mm = 287;
-  manager->outputs[0].subpixel_order = COGL_SUBPIXEL_ORDER_UNKNOWN;
   manager->outputs[0].preferred_mode = &manager->modes[3];
   manager->outputs[0].n_modes = 5;
   manager->outputs[0].modes = g_new0 (MetaMonitorMode *, 5);
@@ -188,7 +188,6 @@ read_current_dummy (MetaMonitorManager *manager)
   manager->outputs[1].serial = g_strdup ("0xC0FFEE");
   manager->outputs[1].width_mm = 222;
   manager->outputs[1].height_mm = 125;
-  manager->outputs[1].subpixel_order = COGL_SUBPIXEL_ORDER_UNKNOWN;
   manager->outputs[1].preferred_mode = &manager->modes[5];
   manager->outputs[1].n_modes = 4;
   manager->outputs[1].modes = g_new0 (MetaMonitorMode *, 4);
@@ -215,7 +214,6 @@ read_current_dummy (MetaMonitorManager *manager)
   manager->outputs[2].serial = g_strdup ("0xC4FE");
   manager->outputs[2].width_mm = 309;
   manager->outputs[2].height_mm = 174;
-  manager->outputs[2].subpixel_order = COGL_SUBPIXEL_ORDER_UNKNOWN;
   manager->outputs[2].preferred_mode = &manager->modes[0];
   manager->outputs[2].n_modes = 3;
   manager->outputs[2].modes = g_new0 (MetaMonitorMode *, 3);
@@ -1371,7 +1369,7 @@ on_name_acquired (GDBusConnection *connection,
                   const char      *name,
                   gpointer         user_data)
 {
-  meta_topic (META_DEBUG_DBUS, "Acquired name %s\n", name);
+  g_debug ("Dbus - Acquired name %s\n", name);
 }
 
 static void
@@ -1379,7 +1377,10 @@ on_name_lost (GDBusConnection *connection,
               const char      *name,
               gpointer         user_data)
 {
-  meta_topic (META_DEBUG_DBUS, "Lost or failed to acquire name %s\n", name);
+  g_debug ("Dbus - Lost or failed to acquire name %s\n", name);
+
+  mainloop_quit ();
+
 }
 
 static void
@@ -1388,7 +1389,7 @@ initialize_dbus_interface (MetaMonitorManager *manager)
   manager->dbus_name_id = g_bus_own_name (G_BUS_TYPE_SESSION,
                                           "org.gnome.Mutter.DisplayConfig",
                                           G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT |
-                                          (meta_get_replace_current_wm () ?
+                                          (replace ?
                                            G_BUS_NAME_OWNER_FLAGS_REPLACE : 0),
                                           on_bus_acquired,
                                           on_name_acquired,
@@ -1400,8 +1401,9 @@ initialize_dbus_interface (MetaMonitorManager *manager)
 static MetaMonitorManager *global_monitor_manager;
 
 void
-meta_monitor_manager_initialize (void)
+meta_monitor_manager_initialize (gboolean do_replace)
 {
+  replace = do_replace;
   global_monitor_manager = meta_monitor_manager_new ();
 }
 
