@@ -377,100 +377,7 @@ read_current_config (MetaMonitorManager *manager)
   META_MONITOR_MANAGER_GET_CLASS (manager)->read_current (manager);
 }
 
-/*
- * make_logical_config:
- *
- * Turn outputs and CRTCs into logical MetaMonitorInfo,
- * that will be used by the core and API layer (MetaScreen
- * and friends)
- */
-static void
-make_logical_config (MetaMonitorManager *manager)
-{
-  GArray *monitor_infos;
-  unsigned int i, j;
 
-  monitor_infos = g_array_sized_new (FALSE, TRUE, sizeof (MetaMonitorInfo),
-                                     manager->n_outputs);
-
-  /* Walk the list of MetaCRTCs, and build a MetaMonitorInfo
-     for each of them, unless they reference a rectangle that
-     is already there.
-  */
-  for (i = 0; i < manager->n_crtcs; i++)
-    {
-      MetaCRTC *crtc = &manager->crtcs[i];
-
-      /* Ignore CRTCs not in use */
-      if (crtc->current_mode == NULL)
-        continue;
-
-      for (j = 0; j < monitor_infos->len; j++)
-        {
-          MetaMonitorInfo *info = &g_array_index (monitor_infos, MetaMonitorInfo, i);
-          if (meta_rectangle_equal (&crtc->rect,
-                                    &info->rect))
-            {
-              crtc->logical_monitor = info;
-              break;
-            }
-        }
-
-      if (crtc->logical_monitor == NULL)
-        {
-          MetaMonitorInfo info;
-
-          info.number = monitor_infos->len;
-          info.rect = crtc->rect;
-          info.is_primary = FALSE;
-          /* This starts true because we want
-             is_presentation only if all outputs are
-             marked as such (while for primary it's enough
-             that any is marked)
-          */
-          info.is_presentation = TRUE;
-          info.in_fullscreen = -1;
-          info.output_id = 0;
-
-          g_array_append_val (monitor_infos, info);
-
-          crtc->logical_monitor = &g_array_index (monitor_infos, MetaMonitorInfo,
-                                                  info.number);
-        }
-    }
-
-  /* Now walk the list of outputs applying extended properties (primary
-     and presentation)
-  */
-  for (i = 0; i < manager->n_outputs; i++)
-    {
-      MetaOutput *output;
-      MetaMonitorInfo *info;
-
-      output = &manager->outputs[i];
-
-      /* Ignore outputs that are not active */
-      if (output->crtc == NULL)
-        continue;
-
-      /* We must have a logical monitor on every CRTC at this point */
-      g_assert (output->crtc->logical_monitor != NULL);
-
-      info = output->crtc->logical_monitor;
-
-      info->is_primary = info->is_primary || output->is_primary;
-      info->is_presentation = info->is_presentation && output->is_presentation;
-
-      if (output->is_primary || info->output_id == 0)
-        info->output_id = output->output_id;
-
-      if (info->is_primary)
-        manager->primary_monitor_index = info->number;
-    }
-
-  manager->n_monitor_infos = monitor_infos->len;
-  manager->monitor_infos = (void*)g_array_free (monitor_infos, FALSE);
-}
 
 static MetaMonitorManager *
 meta_monitor_manager_new (void)
@@ -530,7 +437,6 @@ meta_monitor_manager_constructed (GObject *object)
       g_free (old_crtcs);
     }
 
-  make_logical_config (manager);
   initialize_dbus_interface (manager);
 
   manager->in_init = FALSE;
@@ -1481,8 +1387,6 @@ meta_monitor_manager_rebuild_derived (MetaMonitorManager *manager)
 
   if (manager->in_init)
     return;
-
-  make_logical_config (manager);
 
   g_signal_emit_by_name (manager, "monitors-changed");
 
