@@ -32,14 +32,15 @@
 #include <stdlib.h>
 #include <clutter/clutter.h>
 
-#include <meta/main.h>
-#include <meta/util.h>
-#include <meta/errors.h>
+#include <libintl.h>
+#define _(x) dgettext (GETTEXT_PACKAGE, x)
+
 #include "monitor-private.h"
 
 #include "meta-dbus-xrandr.h"
 
 #define ALL_WL_TRANSFORMS ((1 << (WL_OUTPUT_TRANSFORM_FLIPPED_270 + 1)) - 1)
+
 
 enum {
   CONFIRM_DISPLAY_CHANGE,
@@ -1371,7 +1372,7 @@ on_name_acquired (GDBusConnection *connection,
                   const char      *name,
                   gpointer         user_data)
 {
-  meta_topic (META_DEBUG_DBUS, "Acquired name %s\n", name);
+  g_debug ("Dbus - Acquired name %s\n", name);
 }
 
 static void
@@ -1379,16 +1380,17 @@ on_name_lost (GDBusConnection *connection,
               const char      *name,
               gpointer         user_data)
 {
-  meta_topic (META_DEBUG_DBUS, "Lost or failed to acquire name %s\n", name);
+  g_debug ("Dbus - Lost or failed to acquire name %s\n", name);
 }
 
+//meta_get_replace_current_wm () hardcoded below to TRUE
 static void
 initialize_dbus_interface (MetaMonitorManager *manager)
 {
   manager->dbus_name_id = g_bus_own_name (G_BUS_TYPE_SESSION,
                                           "org.gnome.Mutter.DisplayConfig",
                                           G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT |
-                                          (meta_get_replace_current_wm () ?
+                                          (TRUE ?
                                            G_BUS_NAME_OWNER_FLAGS_REPLACE : 0),
                                           on_bus_acquired,
                                           on_name_acquired,

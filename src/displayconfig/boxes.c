@@ -31,7 +31,6 @@
  */
 
 #include "boxes-private.h"
-#include <meta/util.h>
 #include <X11/Xutil.h>  /* Just for the definition of the various gravities */
 
 /* It would make sense to use GSlice here, but until we clean up the
@@ -439,7 +438,7 @@ merge_spanning_rects_in_region (GList *region)
 
   if (region == NULL)
     {
-      meta_warning ("Region to merge was empty!  Either you have a some "
+      g_warning ("Region to merge was empty!  Either you have a some "
                     "pathological STRUT list or there's a bug somewhere!\n");
       return NULL;
     }
@@ -940,7 +939,7 @@ meta_rectangle_clamp_to_fit_into_region (const GList         *spanning_rects,
   /* Clamp rect appropriately */
   if (best_rect == NULL)
     {
-      meta_warning ("No rect whose size to clamp to found!\n");
+      g_warning ("No rect whose size to clamp to found!\n");
 
       /* If it doesn't fit, at least make it no bigger than it has to be */
       if (!(fixed_directions & FIXED_DIRECTION_X))
@@ -1003,7 +1002,7 @@ meta_rectangle_clip_to_region (const GList         *spanning_rects,
 
   /* Clip rect appropriately */
   if (best_rect == NULL)
-    meta_warning ("No rect to clip to found!\n");
+    g_warning ("No rect to clip to found!\n");
   else
     {
       /* Extra precaution with checking fixed direction shouldn't be needed
@@ -1099,7 +1098,7 @@ meta_rectangle_shove_into_region (const GList         *spanning_rects,
 
   /* Shove rect appropriately */
   if (best_rect == NULL)
-    meta_warning ("No rect to shove into found!\n");
+    g_warning ("No rect to shove into found!\n");
   else
     {
       /* Extra precaution with checking fixed direction shouldn't be needed

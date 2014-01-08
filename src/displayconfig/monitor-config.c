@@ -40,8 +40,6 @@
 #include <clutter/clutter.h>
 #include <libupower-glib/upower.h>
 
-#include <meta/main.h>
-#include <meta/errors.h>
 #include "monitor-private.h"
 
 /* These structures represent the intended/persistent configuration,
@@ -720,7 +718,7 @@ meta_monitor_config_load (MetaMonitorConfig  *self)
   if (!ok)
     {
       if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
-        meta_warning ("Failed to load stored monitor configuration: %s\n", error->message);
+        g_warning ("Failed to load stored monitor configuration: %s\n", error->message);
 
       g_error_free (error);
       return;
@@ -738,7 +736,7 @@ meta_monitor_config_load (MetaMonitorConfig  *self)
 
   if (!ok)
     {
-      meta_warning ("Failed to parse stored monitor configuration: %s\n", error->message);
+      g_warning ("Failed to parse stored monitor configuration: %s\n", error->message);
 
       g_error_free (error);
 
@@ -1252,7 +1250,7 @@ meta_monitor_config_make_default (MetaMonitorConfig  *self,
 
   if (n_outputs == 0)
     {
-      meta_verbose ("No output connected, not applying configuration\n");
+      g_debug ("No output connected, not applying configuration\n");
       return;
     }
 
@@ -1276,7 +1274,7 @@ meta_monitor_config_make_default (MetaMonitorConfig  *self,
 
   if (!ok)
     {
-      meta_warning ("Could not make default configuration for current output layout, leaving unconfigured\n");
+      g_warning ("Could not make default configuration for current output layout, leaving unconfigured\n");
       if (ensure_at_least_one_output (self, manager, outputs, n_outputs))
         meta_monitor_config_update_current (self, manager);
     }
@@ -1399,7 +1397,7 @@ saved_cb (GObject      *object,
   if (!ok)
     {
       if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
-        meta_warning ("Saving monitor configuration failed: %s\n", error->message);
+        g_warning ("Saving monitor configuration failed: %s\n", error->message);
 
       g_error_free (error);
     }
@@ -1754,7 +1752,7 @@ real_assign_crtcs (CrtcAssignment     *assignment,
                   height == output_config->rect.height &&
                   (pass == 1 || mode->refresh_rate == output_config->refresh_rate))
 		{
-                  meta_verbose ("CRTC %ld: trying mode %dx%d@%fHz with output at %dx%d@%fHz (transform %d) (pass %d)\n",
+                  g_debug ("CRTC %ld: trying mode %dx%d@%fHz with output at %dx%d@%fHz (transform %d) (pass %d)\n",
                                 crtc->crtc_id,
                                 mode->width, mode->height, mode->refresh_rate,
                                 output_config->rect.width, output_config->rect.height, output_config->refresh_rate,
@@ -1804,7 +1802,7 @@ meta_monitor_config_assign_crtcs (MetaConfiguration  *config,
 
   if (!real_assign_crtcs (&assignment, 0))
     {
-      meta_warning ("Could not assign CRTC to outputs, ignoring configuration\n");
+      g_warning ("Could not assign CRTC to outputs, ignoring configuration\n");
 
       g_hash_table_destroy (assignment.info);
       return FALSE;

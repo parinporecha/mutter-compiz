@@ -40,10 +40,11 @@
 #include <cogl/cogl.h>
 #include <libgnome-desktop/gnome-pnp-ids.h>
 
-#include "display-private.h"
-#include <meta/screen.h>
-#include "stack-tracker.h"
-#include "ui.h"
+//#include "display-private.h"
+//#include <meta/screen.h>
+//#include "stack-tracker.h"
+//#include "ui.h"
+#include "boxes.h"
 #ifdef HAVE_WAYLAND
 #include <wayland-server.h>
 #endif
