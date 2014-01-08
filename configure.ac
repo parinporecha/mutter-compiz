@@ -439,6 +439,7 @@ src/Makefile
 src/libmutter.pc
 src/mutter-plugins.pc
 src/compositor/plugins/Makefile
+src/displayconfig/Makefile
 po/Makefile.in
 ])
 

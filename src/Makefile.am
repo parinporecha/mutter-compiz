@@ -3,7 +3,7 @@
 
 lib_LTLIBRARIES = libmutter.la
 
-SUBDIRS=compositor/plugins
+SUBDIRS=compositor/plugins displayconfig
 
 INCLUDES=								\
 	-DCLUTTER_ENABLE_EXPERIMENTAL_API				\
