@@ -10,9 +10,14 @@
 #include <X11/Xlib.h>
 #endif
 
-
+#include "monitor.c"
 
 int main (int argc, char ** argv) {
+        GMainLoop *loop = g_main_loop_new(NULL, FALSE);
+
+        meta_monitor_manager_initialize();
+
+        g_main_loop_run(loop);
         return 0;
 }
 

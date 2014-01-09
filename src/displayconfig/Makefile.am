@@ -11,7 +11,6 @@ display_config_server_built_sources = $(dbus_xrandr_built_sources)
 display_config_server_SOURCES = \
 	boxes.c   \
 	main.c    \
-	monitor.c \
 	monitor-config.c \
 	monitor-xrandr.c \
 	edid-parse.c \
