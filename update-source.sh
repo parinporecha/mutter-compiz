@@ -22,7 +22,8 @@ core=(boxes.c
       monitor-xrandr.c	
 )
 meta=(boxes.h
-      common.h)
+      common.h
+      meta-idle-monitor.h)
 
 xml=(idle-monitor.xml  xrandr.xml)
 
