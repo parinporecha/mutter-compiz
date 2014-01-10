@@ -13,7 +13,7 @@ AC_INIT([mutter], [mutter_version],
         [http://bugzilla.gnome.org/enter_bug.cgi?product=mutter])
 
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SRCDIR(src/core/display.c)
+AC_CONFIG_SRCDIR(src/monitor.c)
 AC_CONFIG_HEADERS(config.h)
 
 AM_INIT_AUTOMAKE([1.11 no-dist-gzip dist-xz tar-ustar])
@@ -39,7 +39,7 @@ GETTEXT_PACKAGE=mutter
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",[Name of default gettext domain])
 
-IT_PROG_INTLTOOL([0.34.90])
+#IT_PROG_INTLTOOL([0.34.90])
 AC_PROG_CC
 AC_ISC_POSIX
 AC_HEADER_STDC
@@ -65,8 +65,6 @@ AC_C_BIGENDIAN
 CANBERRA_GTK=libcanberra-gtk3
 CANBERRA_GTK_VERSION=0.26
 
-CLUTTER_PACKAGE=clutter-1.0
-
 MUTTER_PC_MODULES="
    gtk+-3.0 >= 3.9.11
    gio-2.0 >= 2.25.10
@@ -74,8 +72,6 @@ MUTTER_PC_MODULES="
    cairo >= 1.10.0
    gsettings-desktop-schemas >= 3.7.3
    xcomposite >= 0.2 xfixes xrender xdamage xi >= 1.6.0
-   $CLUTTER_PACKAGE >= 1.15.90
-   cogl-1.0 >= 1.15.6
    upower-glib > 0.9.11
    gnome-desktop-3.0
 "
@@ -205,8 +201,8 @@ PKG_CHECK_EXISTS([xi >= 1.6.99.1],
                  AC_DEFINE([HAVE_XI23],[1],[Define if you have support for XInput 2.3 or greater]))
 
 # This is used for plugins
-AC_SUBST(CLUTTER_PACKAGE)
-PKG_CHECK_MODULES(CLUTTER, $CLUTTER_PACKAGE)
+#AC_SUBST(CLUTTER_PACKAGE)
+#PKG_CHECK_MODULES(CLUTTER, $CLUTTER_PACKAGE)
 
 AC_PATH_XTRA
 
@@ -431,16 +427,7 @@ changequote([,])dnl
 
 AC_CONFIG_FILES([
 Makefile
-doc/Makefile
-doc/man/Makefile
-doc/reference/Makefile
-doc/reference/meta-docs.sgml
 src/Makefile
-src/libmutter.pc
-src/mutter-plugins.pc
-src/compositor/plugins/Makefile
-src/displayconfig/Makefile
-po/Makefile.in
 ])
 
 AC_OUTPUT
