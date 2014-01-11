@@ -428,6 +428,7 @@ changequote([,])dnl
 AC_CONFIG_FILES([
 Makefile
 src/Makefile
+data/Makefile
 ])
 
 AC_OUTPUT
