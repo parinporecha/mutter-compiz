@@ -1,0 +1,5 @@
+displayconfig (3.10.2-0ubuntu1~trusty1) trusty; urgency=medium
+
+  * Initial packaging
+
+ -- Tim Lunn <tim@feathertop.org>  Mon, 13 Jan 2014 19:29:14 +1100

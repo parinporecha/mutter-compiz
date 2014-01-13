@@ -1,0 +1,41 @@
+This package was debianized by Thom May <thom@debian.org> on
+Sun, 10 Feb 2002 12:03:22 +0000.
+
+It was downloaded from http://ftp.gnome.org/pub/GNOME/sources/mutter/
+
+Upstream Author: Havoc Pennington <hp@redhat.com>
+
+Copyright:
+   Copyright © 2001-2008  Havoc Pennington, Red Hat, Inc., and others 
+   Copyright © 1995-2000  GTK+ Team
+   Copyright © 2001, 2002 Havoc Pennington
+   Copyright © 2001 Dominik Vogt, Matthias Clasen, and fvwm2 team
+   Copyright © 2001 Havoc Pennington
+   Copyright © 2002, 2003 Red Hat Inc.
+   Copyright © 2002 Red Hat, Inc.
+   Copyright © 2003 Rob Adams
+   Copyright © 2004-2006 Elijah Newren
+   Copyright © 2007 William Jon McCann <mccann@jhu.edu>
+   Copyright © 2013 Red Hat Inc.
+  
+
+License:
+
+   This package is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This package is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this package; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+On Debian systems, the complete text of the GNU General
+Public License can be found in `/usr/share/common-licenses/GPL'.
+
+
