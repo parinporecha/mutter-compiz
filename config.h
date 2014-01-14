@@ -22,17 +22,11 @@
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #define HAVE_GETTEXT 1
 
-/* Define if GObject introspection is available */
-#define HAVE_INTROSPECTION 1
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
 
 /* Define if your <locale.h> file defines LC_MESSAGES. */
 #define HAVE_LC_MESSAGES 1
-
-/* Building with libcanberra for playing sounds */
-#define HAVE_LIBCANBERRA 1
 
 /* Define to 1 if you have the <locale.h> header file. */
 #define HAVE_LOCALE_H 1
@@ -42,15 +36,6 @@
 
 /* Have the Xrandr extension library */
 #define HAVE_RANDR /**/
-
-/* Have the shape extension library */
-#define HAVE_SHAPE /**/
-
-/* Building with SM support */
-#define HAVE_SM /**/
-
-/* Building with startup notification support */
-#define HAVE_STARTUP_NOTIFICATION /**/
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
@@ -73,17 +58,8 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
-/* Define to 1 if you have the <X11/SM/SMlib.h> header file. */
-/* #undef HAVE_X11_SM_SMLIB_H */
-
-/* Building with Xcursor support */
-#define HAVE_XCURSOR /**/
-
 /* Define if you have support for XInput 2.3 or greater */
 #define HAVE_XI23 1
-
-/* Have keyboard extension library */
-#define HAVE_XKB /**/
 
 /* Have the Xsync extension library */
 #define HAVE_XSYNC /**/
@@ -93,19 +69,19 @@
 #define LT_OBJDIR ".libs/"
 
 /* Name of package */
-#define PACKAGE "mutter"
+#define PACKAGE "displayconfig"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "http://bugzilla.gnome.org/enter_bug.cgi?product=mutter"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "mutter"
+#define PACKAGE_NAME "displayconfig"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "mutter 3.10.2"
+#define PACKAGE_STRING "displayconfig 3.10.2"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "mutter"
+#define PACKAGE_TARNAME "displayconfig"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""

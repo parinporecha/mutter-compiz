@@ -1,6 +1,6 @@
 NULL =
 
-INCLUDES = $(MUTTER_CFLAGS)								\
+INCLUDES = $(DISPLAYCONFIG_CFLAGS)								\
 	-I$(top_srcdir)
 
 libexec_PROGRAMS = display-config-daemon
@@ -19,7 +19,7 @@ display_config_daemon_SOURCES = \
 	meta-dbus-xrandr.c 	\
 	meta-dbus-idle-monitor.c
 
-display_config_daemon_LDADD = $(MUTTER_LIBS)
+display_config_daemon_LDADD = $(DISPLAYCONFIG_LIBS)
 
 CLEANFILES = $(dbus_xrandr_built_sources) $(dbus_idle_built_sources)
 

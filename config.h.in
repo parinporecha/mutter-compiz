@@ -21,17 +21,11 @@
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
 
-/* Define if GObject introspection is available */
-#undef HAVE_INTROSPECTION
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
 /* Define if your <locale.h> file defines LC_MESSAGES. */
 #undef HAVE_LC_MESSAGES
-
-/* Building with libcanberra for playing sounds */
-#undef HAVE_LIBCANBERRA
 
 /* Define to 1 if you have the <locale.h> header file. */
 #undef HAVE_LOCALE_H
@@ -41,15 +35,6 @@
 
 /* Have the Xrandr extension library */
 #undef HAVE_RANDR
-
-/* Have the shape extension library */
-#undef HAVE_SHAPE
-
-/* Building with SM support */
-#undef HAVE_SM
-
-/* Building with startup notification support */
-#undef HAVE_STARTUP_NOTIFICATION
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
@@ -72,17 +57,8 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define to 1 if you have the <X11/SM/SMlib.h> header file. */
-#undef HAVE_X11_SM_SMLIB_H
-
-/* Building with Xcursor support */
-#undef HAVE_XCURSOR
-
 /* Define if you have support for XInput 2.3 or greater */
 #undef HAVE_XI23
-
-/* Have keyboard extension library */
-#undef HAVE_XKB
 
 /* Have the Xsync extension library */
 #undef HAVE_XSYNC
