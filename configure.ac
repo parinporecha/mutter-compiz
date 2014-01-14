@@ -28,7 +28,7 @@ AC_SUBST(DISPLAYCONFIG_MICRO_VERSION)
 # Honor aclocal flags
 AC_SUBST(ACLOCAL_AMFLAGS, "\${ACLOCAL_FLAGS}")
 
-GETTEXT_PACKAGE=mutter
+GETTEXT_PACKAGE=displayconfig
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",[Name of default gettext domain])
 
@@ -67,7 +67,7 @@ GLIB_GSETTINGS
 
 AC_ARG_ENABLE(verbose-mode,
   AC_HELP_STRING([--disable-verbose-mode],
-                 [disable mutter's ability to do verbose logging, for embedded/size-sensitive custom builds]),,
+                 [disable displayconfig's ability to do verbose logging, for embedded/size-sensitive custom builds]),,
   enable_verbose_mode=yes)
 
 if test x$enable_verbose_mode = xyes; then
@@ -76,7 +76,7 @@ fi
 
 AC_ARG_ENABLE(xsync,
   AC_HELP_STRING([--disable-xsync],
-                 [disable mutter's use of the XSync extension]),,
+                 [disable displayconfig's use of the XSync extension]),,
   enable_xsync=auto)
 
 AM_GLIB_GNU_GETTEXT
@@ -130,7 +130,7 @@ if test "x$found_xsync" = "xyes"; then
    AC_DEFINE(HAVE_XSYNC, , [Have the Xsync extension library])
 fi
 
-DISPLAYCONFIG_LIBS="$DISPLAYCONFIG_LIBS $XSYNC_LIBS $RANDR_LIBS $SHAPE_LIBS $X_LIBS $X_PRE_LIBS -lX11 $X_EXTRA_LIBS -lm"
+DISPLAYCONFIG_LIBS="$DISPLAYCONFIG_LIBS $XSYNC_LIBS $RANDR_LIBS $X_LIBS $X_PRE_LIBS -lX11 $X_EXTRA_LIBS -lm"
 
 AC_ARG_ENABLE(debug,
 	[  --enable-debug		enable debugging],,
@@ -218,14 +218,14 @@ AC_OUTPUT
 if test x$enable_verbose_mode = xno; then
         echo "*** WARNING WARNING WARNING WARNING WARNING"
         echo "*** Building without verbose mode"
-        echo "*** This means there's no way to debug mutter problems."
-        echo "*** Please build normal desktop versions of mutter"
+        echo "*** This means there's no way to debug displayconfig problems."
+        echo "*** Please build normal desktop versions of displayconfig"
         echo "*** with verbose mode enabled so users can use it when they report bugs."
 fi
 
 dnl ==========================================================================
 echo "
-mutter-$VERSION
+displayconfig-$VERSION
 
 	prefix:                   ${prefix}
 	source code location:	  ${srcdir}
@@ -238,9 +238,9 @@ mutter-$VERSION
 DISPLAYCONFIG_MINOR_VERSION=displayconfig_minor_version
 if expr $DISPLAYCONFIG_MINOR_VERSION % 2 > /dev/null ; then
    stable_version=`expr $DISPLAYCONFIG_MINOR_VERSION - 1`
-   echo "This is the UNSTABLE branch of mutter"
+   echo "This is the UNSTABLE branch of displayconfig"
    echo -n "Use 3.$stable_version.x for stable "
    echo    "(gnome-3-$stable_version branch in git)"
 else
-   echo "This is the stable branch of mutter"
+   echo "This is the stable branch of displayconfig"
 fi

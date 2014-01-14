@@ -8,7 +8,7 @@
 #define ENABLE_NLS 1
 
 /* Name of default gettext domain */
-#define GETTEXT_PACKAGE "mutter"
+#define GETTEXT_PACKAGE "displayconfig"
 
 /* Define to 1 if you have the `bind_textdomain_codeset' function. */
 #define HAVE_BIND_TEXTDOMAIN_CODESET 1
